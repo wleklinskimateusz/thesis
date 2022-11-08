@@ -8,7 +8,7 @@ using LinearAlgebra
 
 function main()
     # if output directory does not exist, create it
-    # create_dir("output")
+    create_dir("output")
     net = generate_net()
     S = get_s_matrix(net)
     K = get_kinetic_matrix(net)
