@@ -8,3 +8,5 @@ const N = 10
 const A = 0.1
 const M = 0.067 # m_e
 const L = 100 / L0 # atomic
+const V0 = 0 # meV
+const OMEGA = 5

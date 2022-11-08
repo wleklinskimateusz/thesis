@@ -34,14 +34,14 @@ function get_parabolic_potential_matrix(net, a=A)
     return potential_matrix
 end
 
-function get_gauss_potential_matrix(net, a=A, l=L)
+function get_gauss_potential_matrix(net, v0=V0, a=A, l=L)
     potential_matrix = zeros(N, N)
     for i in 1:N
         for j in 1:N
             potential_matrix[i, j] = get_gauss_potential_element(net[i], net[j], a, l)
         end
     end
-    return potential_matrix
+    return v0 * potential_matrix
 end
 
 function get_s_matrix(net, a=A)
