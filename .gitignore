@@ -25,3 +25,5 @@ Manifest.toml
 
 
 output/
+*.zip
+.DS_Store
