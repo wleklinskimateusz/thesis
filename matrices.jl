@@ -24,14 +24,14 @@ function get_kinetic_matrix(net, a=A, m=M)
     return kinetic_matrix
 end
 
-function get_parabolic_potential_matrix(net, a=A)
+function get_parabolic_potential_matrix(net, a=A, m=M, ω=OMEGA)
     potential_matrix = zeros(N, N)
     for i in 1:N
         for j in 1:N
             potential_matrix[i, j] = get_parabolic_potential_element(net[i], net[j], a)
         end
     end
-    return potential_matrix
+    return m / 2 * ω^2 * potential_matrix
 end
 
 function get_gauss_potential_matrix(net, v0=V0, a=A, l=L)

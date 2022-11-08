@@ -4,7 +4,7 @@ include("matrices.jl")
 include("net.jl")
 
 using LinearAlgebra
-# using Plots
+using Plots
 
 function main()
     # if output directory does not exist, create it
@@ -17,6 +17,11 @@ function main()
 
     H = K + V_osc + V_gauss
     E, c = eigen(H, S)
+
+    # plot eigenfunctions
+    plt = plot(net, c[:, 1], label="E = $(E[1])")
+    savefig(plt, "output/eigenfunction_1.png")
+
 
     println(get_energy_meV(E))
     save_energy_to_file(E, "energy")
