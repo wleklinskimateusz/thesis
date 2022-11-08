@@ -5,7 +5,7 @@ function create_dir(name)
 end
 
 function get_energy_meV(energy)
-    return energy * 2 * R
+    return energy * 2 / R
 end
 
 function get_energy_atomic(energy)
