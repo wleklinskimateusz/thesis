@@ -14,41 +14,41 @@ function get_s_element(xl, xp, a=A)
     return exp(-a * (xl^2 - 2 * xl * xp + xp^2) / 2) * sqrt(2) * a^(-1 // 2) * sqrt(pi) / 2
 end
 
-function get_kinetic_matrix(net, a=A, m=M)
+function get_kinetic_matrix(centers, a=A, m=M)
     kinetic_matrix = zeros(N, N)
     for i in 1:N
         for j in 1:N
-            kinetic_matrix[i, j] = get_kinetic_element(net[i], net[j], a, m)
+            kinetic_matrix[i, j] = get_kinetic_element(centers[i], centers[j], a, m)
         end
     end
     return kinetic_matrix
 end
 
-function get_parabolic_potential_matrix(net, a=A, m=M, ω=OMEGA)
+function get_parabolic_potential_matrix(centers, a=A, m=M, ω=OMEGA)
     potential_matrix = zeros(N, N)
     for i in 1:N
         for j in 1:N
-            potential_matrix[i, j] = get_parabolic_potential_element(net[i], net[j], a)
+            potential_matrix[i, j] = get_parabolic_potential_element(centers[i], centers[j], a)
         end
     end
     return m / 2 * ω^2 * potential_matrix
 end
 
-function get_gauss_potential_matrix(net, v0=V0, a=A, l=L)
+function get_gauss_potential_matrix(centers, v0=V0, a=A, l=L)
     potential_matrix = zeros(N, N)
     for i in 1:N
         for j in 1:N
-            potential_matrix[i, j] = get_gauss_potential_element(net[i], net[j], a, l)
+            potential_matrix[i, j] = get_gauss_potential_element(centers[i], centers[j], a, l)
         end
     end
     return v0 * potential_matrix
 end
 
-function get_s_matrix(net, a=A)
+function get_s_matrix(centers, a=A)
     s_matrix = zeros(N, N)
     for i in 1:N
         for j in 1:N
-            s_matrix[i, j] = get_s_element(net[i], net[j], a)
+            s_matrix[i, j] = get_s_element(centers[i], centers[j], a)
         end
     end
     return s_matrix
