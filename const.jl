@@ -9,5 +9,5 @@ const M::Float64 = 0.067 # m_e
 const L::Float64 = 100 / L0 # atomic
 const V0::Float64 = 0 / R
 const OMEGA::Float64 = 1.0 / R
-const A::Float64 = 20 * M * OMEGA / 2
+const A::Float64 = 2 * M * OMEGA / 2
 const Δx::Float64 = 2 / sqrt(A)

@@ -7,7 +7,7 @@ include("psi.jl")
 using LinearAlgebra
 using Plots
 
-function main()
+function main()::Nothing
     # if output directory does not exist, create it
     create_dir("output")
     centers::Vector{Float64} = generate_centers()
@@ -16,11 +16,11 @@ function main()
     V_osc::Matrix{Float64} = get_parabolic_potential_matrix(centers)
     V_gauss::Matrix{Float64} = get_gauss_potential_matrix(centers)
 
-    H = K + V_osc + V_gauss
-    E, c = eigen(H, S)
+    H::Matrix{Float64} = K + V_osc + V_gauss
+    E::Vector{Float64}, c::Matrix{Float64} = eigen(H, S)
 
 
-    println(get_energy_meV(E))
+    println(get_energy_meV.(E))
     save_energy_to_file(E, "energy")
     plot_ψ(centers, c, 1, "psi1")
     plot_ψ(centers, c, 2, "psi2")
