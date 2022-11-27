@@ -1,13 +1,13 @@
 # constants
-const L0 = 0.052917721 #nm
-const R = 13605.8 * 2 #meV
+const L0::Float64 = 0.052917721 #nm
+const R::Float64 = 13605.8 * 2 #meV
 
 
 # Parameters
-const N = 10
-const M = 0.067 # m_e
-const L = 100 / L0 # atomic
-const V0 = 0 / R
-const OMEGA = 1 / R
-const A = M * OMEGA / 2
-const Δx = 0.01 / L0
+const N::Int64 = 9
+const M::Float64 = 0.067 # m_e
+const L::Float64 = 100 / L0 # atomic
+const V0::Float64 = 0 / R
+const OMEGA::Float64 = 1.0 / R
+const A::Float64 = 20 * M * OMEGA / 2
+const Δx::Float64 = 2 / sqrt(A)
