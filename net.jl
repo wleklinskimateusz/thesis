@@ -1,4 +1,4 @@
-function generate_centers(dx::Float64=Δx, n::Int64=N ÷ 2)::Vector{Float64}
+function generate_centers(dx::Float64, n::Int64=N ÷ 2)::Vector{Float64}
     # generate centers with step dx and n centers on each side with one at 0
     start::Float64 = -n * dx
     stop::Float64 = n * dx
