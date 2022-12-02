@@ -30,8 +30,14 @@ function calculate_ψ(dx::Float64, a::Float64, l::Float64, v0::Float64, filename
     plot_ψ(centers, c, 1, "$(filename)_1.png")
     plot_ψ(centers, c, 2, "$(filename)_2.png")
     plot_ψ(centers, c, 3, "$(filename)_3.png")
+    plot_ψ(centers, c, 4, "$(filename)_4.png")
+    plot_ψ(centers, c, 5, "$(filename)_5.png")
+    plot_ψ(centers, c, 6, "$(filename)_6.png")
+    plot_ψ(centers, c, 7, "$(filename)_7.png")
+    plot_ψ(centers, c, 8, "$(filename)_8.png")
+    plot_ψ(centers, c, 9, "$(filename)_9.png")
 end
-
+const eps = 0.0001
 function main()
     # if output directory does not exist, create it
     create_dir("output")
@@ -41,13 +47,16 @@ function main()
     for (i, a) in enumerate(α)
         for (j, δx) in enumerate(dx)
             E_matrix[i, j] = get_Energy(δx, a, L, V0)[1]
+            if (abs(E_matrix[i, j] * R - 0.5) < eps)
+                println("Found a match for a = $(a / A), dx = $(δx / Δx)")
+            end
         end
     end
     heatmap(α / A, dx / Δx, E_matrix * R, xlabel="a", ylabel="dx", title="E_1", color=:thermal)
     savefig("output/E_1.png")
 
 
-    calculate_ψ(Δx, A, L, V0, "new_psi")
+    calculate_ψ(0.25 * Δx, 2 * A, L, V0, "new_psi")
 
 end
 

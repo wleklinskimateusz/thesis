@@ -18,8 +18,8 @@ function plot_ψ(centers::Vector{Float64}, c::Matrix{Float64}, i::Int64, filenam
     # find max value of centers
     l = maximum(abs.(centers))
     net = generate_net(l)
-    ψ = generate_ψ(net, centers, c[i, :])
-    ψ = normalise(ψ)
+    ψ = generate_ψ(net, centers, c[:, i])
+    # ψ = normalise(ψ)
     plot(net, abs2.(ψ), label="ψ$i")
     if filename != Nothing
         savefig("output/$filename.png")
