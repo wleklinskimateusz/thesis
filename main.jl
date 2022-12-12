@@ -60,10 +60,9 @@ function plot_probabilities(δx::Float64, α::Float64, states::Int, v0::Float64,
     c, V = calculate_ψ(δx, α, L, v0)
     l = maximum(abs.(centers))
     net = generate_net(l)
-    V = get_gauss_potential(net, centers, v0, α)
-    # V = get_parabolic_potential(net)
-    # plot(net, V * R, label="V(x)")
-    # savefig("output/V.png")
+    V = get_gauss_potential(net, centers, v0, α) + get_parabolic_potential(net)
+    plot(net, V, label="V", title="V0 = $(v0 * R)", xlabel="x", ylabel="V(x)", legend=:bottomright)
+    savefig("output/V.png")
     p = plot()
     for i in 1:states
         ψ = get_ψ(centers, c, i)

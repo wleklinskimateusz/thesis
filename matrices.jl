@@ -4,10 +4,8 @@ function get_gauss_potential(net::Vector{Float64}, centers::Vector{Float64}, v0:
     output::Vector{Float64} = zeros(length(net))
     plot()
     for center::Float64 in centers
-        output = 0.01 * exp.(-a * (net .- center) .^ 2)
-        plot!(net, output, label="v0=$v0, a=$a")
+        output += v0 * exp.(-a * (net .- center) .^ 2)
     end
-    savefig("output/gauss_potential.png")
     return output
 end
 
