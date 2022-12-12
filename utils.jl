@@ -2,6 +2,7 @@ function create_dir(name::String)::Nothing
     if !isdir(name)
         mkdir(name)
     end
+    return nothing
 end
 
 function get_energy_meV(energy::Float64)::Float64

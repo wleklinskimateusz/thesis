@@ -1,3 +1,20 @@
+using Plots
+
+function get_gauss_potential(net::Vector{Float64}, centers::Vector{Float64}, v0::Float64, a::Float64)::Vector{Float64}
+    output::Vector{Float64} = zeros(length(net))
+    plot()
+    for center::Float64 in centers
+        output = 0.01 * exp.(-a * (net .- center) .^ 2)
+        plot!(net, output, label="v0=$v0, a=$a")
+    end
+    savefig("output/gauss_potential.png")
+    return output
+end
+
+function get_parabolic_potential(net::Vector{Float64})::Vector{Float64}
+    return 0.5 * OMEGA^2 * net .^ 2
+end
+
 function get_kinetic_element(xl::Float64, xp::Float64, a::Float64, m::Float64=M)::Float64
     return -sqrt(a) * exp(-a * (xl - xp)^2 / 2) * (-1 + a * (xl - xp)^2) * sqrt(2) * sqrt(pi) / m / 4
 end
