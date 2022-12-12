@@ -1,12 +1,5 @@
-using Plots
-
-function get_gauss_potential(net::Vector{Float64}, centers::Vector{Float64}, v0::Float64, a::Float64)::Vector{Float64}
-    output::Vector{Float64} = zeros(length(net))
-    plot()
-    for center::Float64 in centers
-        output += v0 * exp.(-a * (net .- center) .^ 2)
-    end
-    return output
+function get_gauss_potential(net::Vector{Float64}, centers::Vector{Float64}, v0::Float64, l::Float64)::Vector{Float64}
+    return v0 * exp.(-(net) .^ 2 ./ l^2)
 end
 
 function get_parabolic_potential(net::Vector{Float64})::Vector{Float64}

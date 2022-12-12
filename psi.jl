@@ -10,14 +10,15 @@ function generate_ψ(net::Vector{Float64}, centers::Vector{Float64}, c::Vector{C
     return output
 end
 
-function normalise(ψ::Vector{Float64})::Vector{Float64}
-    return ψ ./ sqrt(sum(ψ .^ 2) * Δx)
+function normalise(net::Vector{Float64}, ψ::Vector{Float64})::Vector{Float64}
+    dx = net[2] - net[1]
+    return ψ ./ sqrt(sum(ψ .^ 2) * dx)
 end
 
 function get_ψ(centers::Vector{Float64}, c::Matrix{ComplexF64}, i::Int64)::Vector{Float64}
     l = maximum(abs.(centers))
     net = generate_net(l)
-    return generate_ψ(net, centers, c[:, i])
+    return normalise(net, generate_ψ(net, centers, c[:, i]))
 end
 
 function plot_ψ(centers::Vector{Float64}, c::Matrix{Float64}, i::Int64, filename=Nothing)

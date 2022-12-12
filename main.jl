@@ -41,7 +41,7 @@ function get_bext_params()
     best_arr = []
     α::Vector{Float64} = (0.1:0.05:3) * A
     dx::Vector{Float64} = (0.1:0.05:3) * Δx
-    ε::Float64 = 1e-3
+    ε::Float64 = 0.1
     for a in α
         for δx in dx
             E = get_Energy(δx, a, L, V0)[1:7]
@@ -61,9 +61,8 @@ function plot_probabilities(δx::Float64, α::Float64, states::Int, v0::Float64,
     l = maximum(abs.(centers))
     net = generate_net(l)
     V = get_gauss_potential(net, centers, v0, α) + get_parabolic_potential(net)
-    plot(net, V, label="V", title="V0 = $(v0 * R)", xlabel="x", ylabel="V(x)", legend=:bottomright)
-    savefig("output/V.png")
-    p = plot()
+    p = plot(net, V / 2, label="V", xlabel="x", ylabel="V(x)")
+
     for i in 1:states
         ψ = get_ψ(centers, c, i)
         p = plot!(net, abs2.(ψ), label="ψ$i")
@@ -83,11 +82,13 @@ function main()
     create_dir("output")
     α, δx = 0.55 * A, 0.1 * Δx
     # δx, α, error = get_bext_params()[end]
-    α, δx = 1.15 * A, 0.25 * Δx
+    # α, δx = 1.15 * A, 0.25 * Δx
+    α, δx = 2.55 * A, 0.25 * Δx
+
     anim = Animation()
-    for i in 1:100
+    for i in 1:500
         v0 = i * 0.01 * V0
-        p = plot_probabilities(δx, α, 4, v0, "V0 = $(v0 * R)")
+        p = plot_probabilities(δx, α, 4, v0, "V0 = $(round(v0 * R, digits=2))meV")
         frame(anim, p)
     end
     gif(anim, "output/PSI.gif", fps=24)
