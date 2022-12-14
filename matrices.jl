@@ -22,6 +22,17 @@ function get_s_element(xl::Float64, xp::Float64, a::Float64)::Float64
     return exp(-a * (xl^2 - 2 * xl * xp + xp^2) / 2) * sqrt(2) * a^(-1 // 2) * sqrt(pi) / 2
 end
 
+function get_z_element(d::Matrix{Float64}, l::Int, k::Int, H_gauss::Matrix{Float64})::Float64
+    n = size(d)[1]
+    output::Float64 = 0
+    for l1 in 1:n
+        for k1 in 1:n
+            output += d[l1, l] * d[k1, k] * H_gauss[l1, k1]
+        end
+    end
+    return output
+end
+
 function get_kinetic_matrix(centers::Vector{Float64}, a::Float64, m::Float64=M)::Matrix{Float64}
     kinetic_matrix::Matrix{Float64} = zeros(N, N)
     for i::Int64 in 1:N
