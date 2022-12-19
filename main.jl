@@ -114,7 +114,19 @@ function orthonormalise_eigenvector(c::Vector{Float64}, ci::Vector{Float64})
     return c - r * ci
 end
 
-function iterate(δx::Float64, α::Float64, l::Float64, v0::Float64, state::Int, filename::String, prev_c=nothing)
+function getEnergy(d::Matrix{Float64}, c::Vector{Float64}, E0::Vector{Float64}, HGauss::Matrix{Float64})
+    output::Float64 = 0
+    for k in 1:N
+        output += c[k]^2 * E0[k]
+        for l in 1:N
+            Z = get_z_element(d, l, k, HGauss)
+            output += c[k] * c[l] * Z
+        end
+    end
+    return output
+end
+
+function iterate(δx::Float64, α::Float64, l::Float64, v0::Float64, state::Int, filename::String, prev_c=nothing, init_c=nothing, t0=1, t_num=100000000)
     if (state > 1 && prev_c === nothing)
         error("For excited states you have to pass previous values for c")
     end
@@ -122,12 +134,18 @@ function iterate(δx::Float64, α::Float64, l::Float64, v0::Float64, state::Int,
     centers = generate_centers(δx)
     E0, d, V = calculate_ψ(δx, α, l, 0.0) # eigenstates for V0 = 0
     H, _, S = generate_matrices(centers, α, l, v0)
-    E, c_all = eigen(Hermitian(H), Hermitian(S))
-    c::Vector{Float64} = d[:, state]
+    # E, c_all = eigen(Hermitian(H), Hermitian(S))
+    c::Vector{Float64} = zeros(length(d[:, state]))
+    if (init_c === nothing)
+        c = d[:, state]
+    else
+        c = init_c
+    end
     println(c' * S * c)
     net = generate_net(l)
     anim = Animation()
-    for t in 1:1000000000
+    E::Vector{Float64} = []
+    for t in t0:t0+t_num
         new_c = zeros(length(c))
         for i in 1:N
             new_c[i] = get_next_c_element(c, d, E0, α, H, i)
@@ -138,24 +156,31 @@ function iterate(δx::Float64, α::Float64, l::Float64, v0::Float64, state::Int,
             end
         end
         c = normalise_eigenvector(new_c, S)
-        if (t % 10000000 == 0)
+        freq::Int = trunc(t_num / 100)
+        if (t % freq == 0)
             ψ = zeros(length(net))
             for (i, center) in enumerate(centers)
                 ψ += generate_ψ_element(net, c[i], center, α)
             end
-            i::Int = trunc(t / 10000000)
-            print("$(i)%")
+            i::Int = trunc(t / freq)
+            print("$(i/10)%", "\r\r\r")
             p = plot(net * L0, abs2.(ψ), xlabel="x [nm]", y="probability [%]", title="t=$t", ylims=(0, 0.002))
+            push!(E, getEnergy(d, c, E0, H))
             frame(anim, p)
             savefig(p, "output/frames/$i.png")
+            save_c_to_file(c, "temp/c")
         end
     end
     gif(anim, "output/$filename.gif")
+    save_c_to_file(E, "E")
+    p = plot(E)
+    savefig(p, "Energy.png")
     return c
 end
 
 function save_c_to_file(c::Vector{Float64}, filename::String)
     create_dir("output/vectors")
+    create_dir("output/vectors/temp")
     f = open("output/vectors/$filename.txt", "w")
     for (i, element) in enumerate(c)
         if (i == length(c))
@@ -183,11 +208,15 @@ function main()
     # δx, α, error = @time get_bext_params()[end]
     α, δx = 2.55 * A, 0.25 * Δx
     # @time animate_v0(δx, α, "Psi2")
-    c1 = @time iterate(δx, α, L, V0, 1, "iteration")
+    # c1 = read_from_file("c1")
+    c1 = @time iterate(δx, α, L, V0, 1, "iteration", nothing, nothing, 1, 1000)
     save_c_to_file(c1, "c1")
-    c1 = read_from_file("c1")
     # c2 = @time iterate(δx, α, L, V0, 2, "Psi2", [c1])
     # save_c_to_file(c2, "c2")
+    # c3 = @time iterate(δx, α, L, V0, 3, "Psi3", [c1, c2])
+    # save_c_to_file(c3, "c3")
+    # c4 = @time iterate(δx, α, L, V0, 4, "Psi4", [c1, c2, c3])
+    # save_c_to_file(c4, "c4")
 
 
 end
