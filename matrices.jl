@@ -22,12 +22,12 @@ function get_s_element(xl::Float64, xp::Float64, a::Float64)::Float64
     return exp(-a * (xl^2 - 2 * xl * xp + xp^2) / 2) * sqrt(2) * a^(-1 // 2) * sqrt(pi) / 2
 end
 
-function get_z_element(d::Matrix{Float64}, l::Int, k::Int, H_gauss::Matrix{Float64})::Float64
-    n = size(d)[1]
+function get_z_element(centers::Vector{Float64}, d::Matrix{Float64}, l::Int, k::Int, α::Float64, v0::Float64)::Float64
     output::Float64 = 0
-    for l1 in 1:n
-        for k1 in 1:n
-            output += d[l1, l] * d[k1, k] * H_gauss[l1, k1]
+    Hz = get_gauss_potential_matrix(centers, v0, α, L)
+    for l1 in 1:N
+        for k1 in 1:N
+            output += d[l1, l] * d[k1, k] * Hz[l1, k1]
         end
     end
     return output

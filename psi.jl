@@ -2,7 +2,7 @@ function generate_ψ_element(net::Vector{Float64}, c::Float64, xn::Float64, a::F
     return c .* exp.(-a * (net .- xn) .^ 2)
 end
 
-function generate_ψ(net::Vector{Float64}, centers::Vector{Float64}, c::Vector{ComplexF64}, a::Float64=A)::Vector{Float64}
+function generate_ψ(net::Vector{Float64}, centers::Vector{Float64}, c::Vector{Float64}, a::Float64=A)::Vector{Float64}
     output::Vector{Float64} = zeros(length(net))
     for (center::Float64, ci::Float64) in zip(centers, c)
         output += generate_ψ_element(net, ci, center, a)
@@ -15,10 +15,9 @@ function normalise(net::Vector{Float64}, ψ::Vector{Float64})::Vector{Float64}
     return ψ ./ sqrt(sum(ψ .^ 2) * dx)
 end
 
-function get_ψ(centers::Vector{Float64}, c::Matrix{ComplexF64}, i::Int64)::Vector{Float64}
+function get_ψ(x::Vector{Float64}, centers::Vector{Float64}, c::Matrix{Float64}, i::Int64)::Vector{Float64}
     l = maximum(abs.(centers))
-    net = generate_net(l)
-    return normalise(net, generate_ψ(net, centers, c[:, i]))
+    return normalise(x, generate_ψ(x, centers, c[:, i]))
 end
 
 function plot_ψ(centers::Vector{Float64}, c::Matrix{Float64}, i::Int64, filename=Nothing)
@@ -26,7 +25,7 @@ function plot_ψ(centers::Vector{Float64}, c::Matrix{Float64}, i::Int64, filenam
     l = maximum(abs.(centers))
     net = generate_net(l)
 
-    ψ = get_ψ(centers, c, i)
+    ψ = get_ψ(net, centers, c, i)
     plot(net, abs2.(ψ), label="ψ$i")
     if filename != Nothing
         savefig("output/$filename.png")
