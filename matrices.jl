@@ -1,9 +1,9 @@
-function get_gauss_potential(net::Vector{Float64}, centers::Vector{Float64}, v0::Float64, l::Float64)::Vector{Float64}
+function get_gauss_potential(net::Vector{Float64}, v0::Float64, l::Float64)::Vector{Float64}
     return v0 * exp.(-(net) .^ 2 ./ l^2)
 end
 
 function get_parabolic_potential(net::Vector{Float64})::Vector{Float64}
-    return 0.5 * OMEGA^2 * net .^ 2
+    return 0.5 * M * OMEGA^2 * net .^ 2
 end
 
 function get_kinetic_element(xl::Float64, xp::Float64, a::Float64, m::Float64=M)::Float64
@@ -19,18 +19,18 @@ function get_gauss_potential_element(xl::Float64, xp::Float64, a::Float64, l::Fl
 end
 
 function get_s_element(xl::Float64, xp::Float64, a::Float64)::Float64
-    return exp(-a * (xl^2 - 2 * xl * xp + xp^2) / 2) * sqrt(2) * a^(-1 // 2) * sqrt(pi) / 2
+    return exp(-a * (xl^2 - 2 * xl * xp + xp^2) / 2) * sqrt(2) * a^(-1 // 2) * sqrt(π) / 2
 end
 
-function get_z_element(centers::Vector{Float64}, d::Matrix{Float64}, l::Int, k::Int, α::Float64, v0::Float64)::Float64
-    output::Float64 = 0
-    Hz = get_gauss_potential_matrix(centers, v0, α, L)
+function get_z_element(centers::Vector{Float64}, d::Matrix{Float64}, l::Int, k::Int, a::Float64, v0::Float64)::Float64
+    Vz::Float64 = 0
+    VzGauss = get_gauss_potential_matrix(centers, v0, a, L)
     for l1 in 1:N
         for k1 in 1:N
-            output += d[l1, l] * d[k1, k] * Hz[l1, k1]
+            Vz += d[l1, l] * d[k1, k] * VzGauss[l1, k1]
         end
     end
-    return output
+    return Vz
 end
 
 function get_kinetic_matrix(centers::Vector{Float64}, a::Float64, m::Float64=M)::Matrix{Float64}
@@ -64,9 +64,9 @@ function get_gauss_potential_matrix(centers::Vector{Float64}, v0::Float64, a::Fl
 end
 
 function get_s_matrix(centers::Vector{Float64}, a::Float64)::Matrix{Float64}
-    s_matrix::Matrix{Float64} = zeros(N, N)
-    for i::Int64 in 1:N
-        for j::Int64 in 1:N
+    s_matrix = zeros(N, N)
+    for i in 1:N
+        for j in 1:N
             s_matrix[i, j] = get_s_element(centers[i], centers[j], a)
         end
     end

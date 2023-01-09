@@ -16,7 +16,6 @@ function normalise(net::Vector{Float64}, ψ::Vector{Float64})::Vector{Float64}
 end
 
 function get_ψ(x::Vector{Float64}, centers::Vector{Float64}, c::Matrix{Float64}, i::Int64)::Vector{Float64}
-    l = maximum(abs.(centers))
     return normalise(x, generate_ψ(x, centers, c[:, i]))
 end
 
